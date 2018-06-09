@@ -29,6 +29,10 @@ const preguntas = [
 
 // Una vez recibo respuestas comienzo el proceso de compresión
 inquirer.prompt(preguntas).then(respuestas => {
+  if (!respuestas.isConfirmed) {
+    console.log("Veo que no quieres comprimir. Otra vez será ;)");
+    return;
+  }
   // Creo un stream donde se gaurdarán los datos, con el nombre recibido
   const output = fs.createWriteStream(`${respuestas.fileName}.zip`);
   // Creeo un objeto generador de compresión
