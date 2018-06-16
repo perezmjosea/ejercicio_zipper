@@ -2,14 +2,15 @@ const fs = require("fs");
 const archiver = require("archiver");
 const inquirer = require("inquirer");
 
+const preguntaInicial = [{
+  message: "¿Quieres comprimir archivos?",
+  type: "confirm",
+  name: "isConfirmed",
+  default: true
+}];
+
 // Creo array de preguntas
 const preguntas = [
-  {
-    message: "¿Quieres comprimir archivos?",
-    type: "confirm",
-    name: "isConfirmed",
-    default: true
-  },
   {
     message: "¿Qué archivos quiere comprimir?",
     type: "checkbox",
@@ -27,12 +28,14 @@ const preguntas = [
   }
 ];
 
-// Una vez recibo respuestas comienzo el proceso de compresión
-inquirer.prompt(preguntas).then(respuestas => {
+inquirer.prompt(preguntaInicial).then(respuestas => {
   if (!respuestas.isConfirmed) {
     console.log("Veo que no quieres comprimir. Otra vez será ;)");
     return;
   }
+
+  // Una vez recibo respuestas comienzo el proceso de compresión
+  inquirer.prompt(preguntas).then(respuestas => {
   // Creo un stream donde se gaurdarán los datos, con el nombre recibido
   const output = fs.createWriteStream(`${respuestas.fileName}.zip`);
   // Creeo un objeto generador de compresión
@@ -59,4 +62,6 @@ inquirer.prompt(preguntas).then(respuestas => {
 
   // Ejecuto el proceso
   archive.finalize();
+});
+
 });
