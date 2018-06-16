@@ -56,9 +56,16 @@ inquirer.prompt(preguntaInicial).then(respuestas => {
   archive.pipe(output);
 
   // Por cada archivo seleccionado, lo añado comprimido con un nombre
-  respuestas.selectedFiles.forEach(item =>
-    archive.append(fs.createReadStream(`./files/${item}`), { name: item })
-  );
+  respuestas.selectedFiles.forEach(item => {
+    const path = `./files/${item}`;
+    // Comprobamos si existe el archivo a comprimir
+    if (!fs.existsSync(path)) {
+      // En caso de que no exista, detenemos la ejecución lanzando un error
+      throw new Error(`El archivo seleccionado no existe: ${path}`);
+    }
+
+    return archive.append(fs.createReadStream(path), { name: item })
+  });
 
   // Ejecuto el proceso
   archive.finalize();
