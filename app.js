@@ -19,7 +19,7 @@ async function askForFilename(questions) {
     "./files/"
   );
 
-  output = outputGenerator.setListeners(output, archive.pointer());
+  output = outputGenerator.setListeners(output);
 
   // Ejecuto el proceso
   archiveGenerator.finish(archive);
